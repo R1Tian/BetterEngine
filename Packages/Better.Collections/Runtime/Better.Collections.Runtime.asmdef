@@ -1,0 +1,16 @@
+{
+    "name": "Better.Collections.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3a8879baf01d2a9428a27564390e1385"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
