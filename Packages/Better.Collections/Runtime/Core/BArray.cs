@@ -77,7 +77,7 @@
 #endif
                 return;
             }
-            
+
             IsRecycled = false;
             _version++;
             _capacity = BinaryHelper.GetAlignSize(length);
