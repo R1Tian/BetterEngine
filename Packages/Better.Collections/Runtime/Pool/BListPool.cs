@@ -11,19 +11,19 @@ namespace Better.Collections
         private static BListPool<T> _default;
         public static BListPool<T> Default => _default ??= new BListPool<T>();
 
-        public BList<T> Get(int length = 0)
+        public BList<T> Get(int initNum = 0)
         {
             while (_stacks.Count > 0)
             {
                 var list = _stacks.Pop();
                 if (list == null) continue;
                 
-                list.Renew(length);
+                list.Renew(initNum);
                 
                 return list;
             }
             
-            return new BList<T>(_itemsPool, _operateItemsPool, length);
+            return new BList<T>(_itemsPool, _operateItemsPool, initNum);
         }
 
         public void Recycle(BList<T> list)

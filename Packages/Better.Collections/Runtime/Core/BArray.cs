@@ -6,10 +6,26 @@
 
         public bool IsRecycled { get; private set; }
         private int _version;
-        
+
+        private int _length; // 长度
         private int _capacity; // 容量
 
         private T[] _items;
+        
+        public int Length
+        {
+            get
+            {
+                if (IsRecycled)
+                {
+#if BAMBOO_COLLECTIONS_DEBUG || UNITY_EDITOR
+                    UnityEngine.Debug.LogError($"This container has been recycled. get Length : {_length}");
+#endif
+                }
+                
+                return _length;
+            }
+        }
 
         public int Capacity
         {
@@ -64,6 +80,7 @@
             
             IsRecycled = false;
             _version = 1;
+            _length = length;
             _capacity = BinaryHelper.GetAlignSize(length);
             _items = _itemsPool.Get(length);
         }
@@ -80,6 +97,7 @@
 
             IsRecycled = false;
             _version++;
+            _length = length;
             _capacity = BinaryHelper.GetAlignSize(length);
             _items = _itemsPool.Get(length);
         }
@@ -94,28 +112,30 @@
             _itemsPool.Recycle(_items);
             _items = null;
             
-            _capacity = 0;
+            _length = _capacity = 0;
         }
-
-        public void ResetCapacity(int length)
+        
+        public void ResetLength(int length)
         {
-            if (!IsRecycled)
+            if (IsRecycled)
             {
 #if BAMBOO_COLLECTIONS_DEBUG || UNITY_EDITOR
-                UnityEngine.Debug.LogError($"This container has not been recycled. ResetLength(int length) : {length}");
+                UnityEngine.Debug.LogError($"This container has been recycled. ResetLength(length) : {length}");
 #endif
                 return;
             }
-            
-            var newCapacity = BinaryHelper.GetAlignSize(length);
-            if (_capacity != newCapacity)
+
+            _length = length;
+
+            int oldSize = _capacity;
+            _capacity = BinaryHelper.GetAlignSize(length);
+
+            if (_capacity != oldSize)
             {
-                var newItems = _itemsPool.Get(newCapacity);
-                System.Array.Copy(_items, 0, newItems, 0, System.Math.Min(_capacity, newCapacity));
+                T[] newItems = _itemsPool.Get(length);
+                System.Array.Copy(_items, 0, newItems, 0, System.Math.Min(_capacity, oldSize));
                 _itemsPool.Recycle(_items);
                 _items = newItems;
-                
-                _capacity = newCapacity;
             }
         }
 
@@ -141,7 +161,7 @@
 #endif
             }
 
-            return System.Array.IndexOf(_items, item, 0, _capacity);
+            return System.Array.IndexOf(_items, item, 0, _length);
         }
 
         public void Clear()
@@ -155,6 +175,57 @@
             }
             
             System.Array.Clear(_items, 0, _capacity);
+        }
+
+        public void Remove(T item)
+        {
+            if (IsRecycled)
+            {
+#if BAMBOO_COLLECTIONS_DEBUG || UNITY_EDITOR
+                UnityEngine.Debug.LogError($"This container has been recycled. Remove(item) : {item}");
+#endif
+                return;
+            }
+            
+            int index = IndexOf(item);
+            if (index < 0) return;
+
+            RemoveAt(index);
+        }
+        
+        public void RemoveAt(int index)
+        {
+            if (IsRecycled)
+            {
+#if BAMBOO_COLLECTIONS_DEBUG || UNITY_EDITOR
+                UnityEngine.Debug.LogError($"This container has been recycled. RemoveAt(index) : {index}");
+#endif
+                return;
+            }
+
+            if (index < 0 || index >= _length)
+            {
+                throw new System.ArgumentOutOfRangeException(nameof(index), index, string.Empty);
+            }
+            
+            _length--;
+            
+            int oldCapacity = _capacity;
+            _capacity = BinaryHelper.GetAlignSize(_length);
+
+            if (_capacity != oldCapacity)
+            {
+                T[] newItems = _itemsPool.Get(_length);
+                if (index > 0) System.Array.Copy(_items, 0, newItems, 0, index);
+                if (index < _length) System.Array.Copy(_items, index + 1, newItems, index, _length - index);
+                _itemsPool.Recycle(_items);
+                _items = newItems;
+            }
+            else
+            {
+                if (index < _length) System.Array.Copy(_items, index + 1, _items, index, _length - index);
+                _items[_length] = default;
+            }
         }
     }
 }
