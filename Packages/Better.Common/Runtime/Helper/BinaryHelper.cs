@@ -10,9 +10,10 @@
         static BinaryHelper()
         {
             _power2 = new int[_maxBit - _minBit + 1];
-            for (int i = _minBit; i <= _maxBit; i++)
+            _power2[0] = 1;
+            for (int i = _minBit + 1; i <= _maxBit; i++)
             {
-                _power2[i] = (int)System.Math.Pow(2,i);
+                _power2[i] = 2 * _power2[i - 1];
             }
         }
 
@@ -61,7 +62,7 @@
 
             if (index >= _minBit && index <= _maxBit) return _power2[index];
 
-            return (int)System.Math.Pow(2, index);
+            return _power2[index];
         }
     }
 }

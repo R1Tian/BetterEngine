@@ -127,13 +127,13 @@
 
             _length = length;
 
-            int oldSize = _capacity;
+            int oldCapacity = _capacity;
             _capacity = BinaryHelper.GetAlignSize(length);
 
-            if (_capacity != oldSize)
+            if (_capacity != oldCapacity)
             {
                 T[] newItems = _itemsPool.Get(length);
-                System.Array.Copy(_items, 0, newItems, 0, System.Math.Min(_capacity, oldSize));
+                System.Array.Copy(_items, 0, newItems, 0, System.Math.Min(_capacity, oldCapacity));
                 _itemsPool.Recycle(_items);
                 _items = newItems;
             }

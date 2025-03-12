@@ -12,9 +12,10 @@ namespace Better.Collections
         static BinaryHelper()
         {
             _power2 = new int[_maxBit - _minBit + 1];
-            for (int i = _minBit; i <= _maxBit; i++)
+            _power2[0] = 1;
+            for (int i = _minBit + 1; i <= _maxBit; i++)
             {
-                _power2[i] = (int)Mathf.Pow(i, 2);
+                _power2[i] = 2 * _power2[i - 1];
             }
         }
 
@@ -27,7 +28,7 @@ namespace Better.Collections
         {
             for (int i = 0; i < _power2.Length; i++)
             {
-                if (length < _power2[i]) return _power2[i];
+                if (length <= _power2[i]) return _power2[i];
             }
 
             return length;

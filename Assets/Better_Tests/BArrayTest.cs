@@ -6,10 +6,8 @@ public class BArrayTest
     [Test]
     public void BArrayTest1()
     {
-        var bArray = BArrayPool<int>.Default.Get(3);
+        var a = BArrayPool<int>.Default.Get(7);
         
-        BArrayPool<int>.Default.Recycle(bArray);
-        
-        var bArray2 = BArrayPool<int>.Default.Get(3);
+        a.ResetLength(13);
     }
 }
