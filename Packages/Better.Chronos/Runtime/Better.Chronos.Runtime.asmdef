@@ -1,8 +1,9 @@
 {
-    "name": "Better.Collections.Runtime",
-    "rootNamespace": "Better.Collections",
+    "name": "Better.Chronos.Runtime",
+    "rootNamespace": "Better.Chronos",
     "references": [
-        "GUID:3a8879baf01d2a9428a27564390e1385"
+        "GUID:3a8879baf01d2a9428a27564390e1385",
+        "GUID:83dfb76ac1b35ac4eaf82bb131f5684b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

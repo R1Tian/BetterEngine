@@ -1,16 +1,14 @@
 {
-    "name": "Better_Tests",
+    "name": "Better_Tests_PlayMode",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "Better.Chronos.Runtime",
         "Better.Collections.Runtime",
-        "Better.Common.Runtime",
-        "Better.Chronos.Runtime"
+        "Better.Common.Runtime"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,

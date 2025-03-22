@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.better.chronos": {
+      "version": "file:Better.Chronos",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.better.common": "1.2.0"
+      }
+    },
     "com.better.collections": {
       "version": "file:Better.Collections",
       "depth": 0,
